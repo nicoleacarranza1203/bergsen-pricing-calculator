@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bergsen Pricing Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f1117;
+    --surface:   #181c25;
+    --surface2:  #1e2333;
+    --border:    rgba(255,255,255,0.07);
+    --border2:   rgba(255,255,255,0.12);
+    --text:      #e8eaf0;
+    --muted:     #7a8099;
+    --dim:       #4a5068;
+    --accent:    #2dd4a0;
+    --accent-dim:#1a7a5e;
+    --warn:      #f0a840;
+    --danger:    #e05252;
+    --mono:      'DM Mono', monospace;
+    --sans:      'DM Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3rem 1rem 4rem;
+  }
+
+  .container { width: 100%; max-width: 600px; }
+
+  .header { margin-bottom: 2.5rem; }
+  .header-top { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; }
+  .company { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em; color: var(--accent); text-transform: uppercase; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+  .subtitle { font-size: 13px; color: var(--muted); }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .input-block { margin-bottom: 2rem; }
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 4px 16px;
+    transition: border-color 0.2s;
+  }
+  .input-wrap:focus-within { border-color: var(--accent); }
+  .prefix { font-family: var(--mono); font-size: 20px; color: var(--muted); margin-right: 8px; }
+  input[type="number"] {
+    background: none;
+    border: none;
+    outline: none;
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--text);
+    width: 100%;
+    padding: 10px 0;
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  .tier-block { margin-bottom: 2rem; }
+  .tiers { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tier-btn {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 400;
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tier-btn:hover { border-color: var(--accent-dim); color: var(--text); }
+  .tier-btn.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .card.featured { border-color: var(--accent-dim); grid-column: span 2; }
+  .card-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; font-family: var(--mono); letter-spacing: 0.06em; }
+  .card-value {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .card-value.featured { font-size: 32px; color: var(--accent); }
+  .card-value.positive { color: var(--accent); }
+  .card-value.neutral { color: var(--text); }
+  .card-value.warn { color: var(--warn); }
+
+  .breakdown-block { margin-bottom: 2rem; }
+  .breakdown {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .bd-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .bd-row:last-child { border-bottom: none; background: var(--surface2); }
+  .bd-lbl { color: var(--muted); }
+  .bd-lbl small { font-size: 11px; color: var(--dim); }
+  .bd-val { font-family: var(--mono); font-size: 14px; color: var(--text); }
+  .bd-row:last-child .bd-val { font-size: 16px; font-weight: 500; color: var(--accent); }
+
+  .bar-block { margin-bottom: 2.5rem; }
+  .bar-track {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 8px 0 6px;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .bar-fill.warn { background: var(--warn); }
+  .bar-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--dim); font-family: var(--mono); }
+
+  .footer-note {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+  .footer-note strong { color: var(--muted); font-weight: 500; }
+
+  .empty-state { color: var(--dim); font-family: var(--mono); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-top">
+      <span class="company">Bergsen, Inc.</span>
+    </div>
+    <h1>Pricing Calculator</h1>
+    <p class="subtitle">Based on Q1 2026 overhead rate — 21.1¢ per dollar of net sales</p>
+  </div>
+
+  <div class="input-block">
+    <p class="section-label">Material cost</p>
+    <div class="input-wrap">
+      <span class="prefix">$</span>
+      <input type="number" id="mat-cost" placeholder="0.00" min="0" step="0.01" />
+    </div>
+  </div>
+
+  <div class="tier-block">
+    <p class="section-label">Profit target</p>
+    <div class="tiers">
+      <button class="tier-btn active" data-margin="0.20" onclick="setTarget(this)">Conservative — 20%</button>
+      <button class="tier-btn" data-margin="0.25" onclick="setTarget(this)">Standard — 25%</button>
+      <button class="tier-btn" data-margin="0.30" onclick="setTarget(this)">Strong — 30%</button>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card featured">
+      <p class="card-label">Recommended sell price</p>
+      <p class="card-value featured empty-state" id="sell-price">—</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Gross profit $</p>
+      <p class="card-value empty-state" id="gross-profit">—</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Gross margin %</p>
+      <p class="card-value empty-state" id="gross-margin">—</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Overhead covered</p>
+      <p class="card-value empty-state" id="overhead-cov">—</p>
+    </div>
+    <div class="card">
+      <p class="card-label">Profit amount</p>
+      <p class="card-value empty-state" id="profit-amt">—</p>
+    </div>
+  </div>
+
+  <div class="breakdown-block">
+    <p class="section-label">Price breakdown</p>
+    <div class="breakdown">
+      <div class="bd-row">
+        <span class="bd-lbl">Material cost</span>
+        <span class="bd-val empty-state" id="bd-mat">—</span>
+      </div>
+      <div class="bd-row">
+        <span class="bd-lbl">Overhead load <small>(21.1¢ per $1 cost)</small></span>
+        <span class="bd-val empty-state" id="bd-oh">—</span>
+      </div>
+      <div class="bd-row">
+        <span class="bd-lbl">Profit target</span>
+        <span class="bd-val empty-state" id="bd-profit">—</span>
+      </div>
+      <div class="bd-row">
+        <span class="bd-lbl">Sell price</span>
+        <span class="bd-val empty-state" id="bd-total">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bar-block">
+    <p class="section-label">Gross margin</p>
+    <div class="bar-track"><div class="bar-fill" id="margin-bar" style="width:0%"></div></div>
+    <div class="bar-labels"><span>0%</span><span id="bar-pct">enter a cost above</span><span>50%</span></div>
+  </div>
+
+  <div class="footer-note">
+    <strong>Overhead rate source:</strong> Q1 2026 P&L (Jan–Mar). Selling expenses ($280,357) + G&A ($431,851) = $712,208 total overhead on $3,366,595 net sales = <strong>21.1¢ overhead per dollar of revenue</strong>. Profit target is applied on top of material cost + overhead. Adjust tier based on competitive conditions, order size, and customer relationship.
+  </div>
+
+</div>
+<script>
+  const OVERHEAD_RATE = 0.211;
+  let targetMargin = 0.20;
+
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function pct(n) { return (n * 100).toFixed(1) + '%'; }
+
+  function setTarget(btn) {
+    document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    targetMargin = parseFloat(btn.dataset.margin);
+    recalc();
+  }
+
+  function recalc() {
+    const raw = parseFloat(document.getElementById('mat-cost').value);
+    const ids = ['sell-price','gross-profit','gross-margin','overhead-cov','profit-amt','bd-mat','bd-oh','bd-profit','bd-total'];
+
+    if (!raw || raw <= 0) {
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        el.textContent = '—';
+        el.className = 'card-value empty-state';
+      });
+      document.getElementById('bar-pct').textContent = 'enter a cost above';
+      document.getElementById('margin-bar').style.width = '0%';
+      document.getElementById('margin-bar').className = 'bar-fill';
+      return;
+    }
+
+    const overhead  = raw * OVERHEAD_RATE;
+    const base      = raw + overhead;
+    const profitAmt = base * targetMargin;
+    const sellPrice = base + profitAmt;
+    const grossProfit = sellPrice - raw;
+    const grossMargin = grossProfit / sellPrice;
+    const isWarn = grossMargin < 0.18;
+
+    const set = (id, val, cls) => {
+      const el = document.getElementById(id);
+      el.textContent = val;
+      el.className = 'card-value ' + (cls || 'neutral');
+    };
+
+    set('sell-price',   fmt(sellPrice),   'featured');
+    set('gross-profit', fmt(grossProfit), grossMargin >= 0.25 ? 'positive' : isWarn ? 'warn' : 'neutral');
+    set('gross-margin', pct(grossMargin), grossMargin >= 0.25 ? 'positive' : isWarn ? 'warn' : 'neutral');
+    set('overhead-cov', fmt(overhead),    'neutral');
+    set('profit-amt',   fmt(profitAmt),   'neutral');
+
+    document.getElementById('bd-mat').textContent    = fmt(raw);
+    document.getElementById('bd-oh').textContent     = fmt(overhead);
+    document.getElementById('bd-profit').textContent = fmt(profitAmt);
+    document.getElementById('bd-total').textContent  = fmt(sellPrice);
+
+    ['bd-mat','bd-oh','bd-profit','bd-total'].forEach(id => {
+      document.getElementById(id).className = 'bd-val';
+    });
+
+    const barPct = Math.min(grossMargin * 100 / 50 * 100, 100);
+    const bar = document.getElementById('margin-bar');
+    bar.style.width = barPct + '%';
+    bar.className = 'bar-fill' + (isWarn ? ' warn' : '');
+    document.getElementById('bar-pct').textContent = pct(grossMargin);
+  }
+
+  document.getElementById('mat-cost').addEventListener('input', recalc);
+</script>
+</body>
+</html>
