@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,20 +10,21 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #0f1117;
-    --surface:   #181c25;
-    --surface2:  #1e2333;
-    --border:    rgba(255,255,255,0.07);
-    --border2:   rgba(255,255,255,0.12);
-    --text:      #e8eaf0;
-    --muted:     #7a8099;
-    --dim:       #4a5068;
-    --accent:    #2dd4a0;
-    --accent-dim:#1a7a5e;
-    --warn:      #f0a840;
-    --danger:    #e05252;
-    --mono:      'DM Mono', monospace;
-    --sans:      'DM Sans', sans-serif;
+    --bg:          #0f1117;
+    --surface:     #181c25;
+    --surface2:    #1e2333;
+    --border:      rgba(255,255,255,0.07);
+    --border2:     rgba(255,255,255,0.12);
+    --text:        #e8eaf0;
+    --muted:       #7a8099;
+    --dim:         #4a5068;
+    --accent:      #2dd4a0;
+    --accent-dim:  #1a7a5e;
+    --accent2:     #60a5fa;
+    --accent2-dim: #1e3a5f;
+    --warn:        #f0a840;
+    --mono:        'DM Mono', monospace;
+    --sans:        'DM Sans', sans-serif;
   }
 
   body {
@@ -38,12 +40,11 @@
     padding: 3rem 1rem 4rem;
   }
 
-  .container { width: 100%; max-width: 600px; }
+  .container { width: 100%; max-width: 620px; }
 
-  .header { margin-bottom: 2.5rem; }
-  .header-top { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; }
-  .company { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em; color: var(--accent); text-transform: uppercase; }
-  h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
+  .header { margin-bottom: 2rem; }
+  .company { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em; color: var(--accent); text-transform: uppercase; margin-bottom: 6px; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); margin-bottom: 4px; }
   .subtitle { font-size: 13px; color: var(--muted); }
 
   .section-label {
@@ -56,6 +57,41 @@
     margin-bottom: 10px;
   }
 
+  /* Order type toggle */
+  .order-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 2rem; }
+  .order-btn {
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.18s;
+    font-family: var(--sans);
+  }
+  .order-btn:hover { border-color: var(--dim); color: var(--text); }
+  .order-btn .ob-title { font-size: 14px; font-weight: 500; display: block; margin-bottom: 3px; }
+  .order-btn .ob-desc  { font-size: 11px; color: var(--dim); display: block; line-height: 1.5; }
+  .order-btn .ob-rate  { font-family: var(--mono); font-size: 11px; margin-top: 8px; display: block; }
+
+  .order-btn.active.stock {
+    border-color: var(--accent);
+    background: rgba(29,154,117,0.10);
+    color: var(--text);
+  }
+  .order-btn.active.stock .ob-title { color: var(--accent); }
+  .order-btn.active.stock .ob-rate  { color: var(--accent); }
+
+  .order-btn.active.buyout {
+    border-color: var(--accent2);
+    background: rgba(96,165,250,0.10);
+    color: var(--text);
+  }
+  .order-btn.active.buyout .ob-title { color: var(--accent2); }
+  .order-btn.active.buyout .ob-rate  { color: var(--accent2); }
+
+  /* Input */
   .input-block { margin-bottom: 2rem; }
   .input-wrap {
     display: flex;
@@ -67,133 +103,99 @@
     transition: border-color 0.2s;
   }
   .input-wrap:focus-within { border-color: var(--accent); }
+  .input-wrap.buyout-mode:focus-within { border-color: var(--accent2); }
   .prefix { font-family: var(--mono); font-size: 20px; color: var(--muted); margin-right: 8px; }
   input[type="number"] {
-    background: none;
-    border: none;
-    outline: none;
-    font-family: var(--mono);
-    font-size: 28px;
-    font-weight: 500;
-    color: var(--text);
-    width: 100%;
-    padding: 10px 0;
+    background: none; border: none; outline: none;
+    font-family: var(--mono); font-size: 28px; font-weight: 500;
+    color: var(--text); width: 100%; padding: 10px 0;
     -moz-appearance: textfield;
   }
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
+  /* Profit tiers */
   .tier-block { margin-bottom: 2rem; }
   .tiers { display: flex; gap: 8px; flex-wrap: wrap; }
   .tier-btn {
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 400;
-    padding: 7px 16px;
-    border-radius: 8px;
-    border: 1px solid var(--border2);
-    background: var(--surface);
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.15s;
+    font-family: var(--sans); font-size: 13px; font-weight: 400;
+    padding: 7px 16px; border-radius: 8px;
+    border: 1px solid var(--border2); background: var(--surface);
+    color: var(--muted); cursor: pointer; transition: all 0.15s;
   }
-  .tier-btn:hover { border-color: var(--accent-dim); color: var(--text); }
-  .tier-btn.active {
-    background: var(--accent-dim);
-    border-color: var(--accent);
-    color: var(--accent);
-    font-weight: 500;
-  }
+  .tier-btn:hover { color: var(--text); }
+  .tier-btn.active.stock  { background: var(--accent-dim);  border-color: var(--accent);  color: var(--accent);  font-weight: 500; }
+  .tier-btn.active.buyout { background: var(--accent2-dim); border-color: var(--accent2); color: var(--accent2); font-weight: 500; }
 
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 2rem;
-  }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 18px;
-  }
-  .card.featured { border-color: var(--accent-dim); grid-column: span 2; }
+  /* Cards */
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 2rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .card.featured { grid-column: span 2; }
+  .card.featured.stock  { border-color: var(--accent-dim); }
+  .card.featured.buyout { border-color: var(--accent2-dim); }
   .card-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; font-family: var(--mono); letter-spacing: 0.06em; }
-  .card-value {
-    font-family: var(--mono);
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--text);
-  }
-  .card-value.featured { font-size: 32px; color: var(--accent); }
-  .card-value.positive { color: var(--accent); }
-  .card-value.neutral { color: var(--text); }
-  .card-value.warn { color: var(--warn); }
+  .card-value { font-family: var(--mono); font-size: 22px; font-weight: 500; color: var(--text); }
+  .card-value.featured       { font-size: 32px; }
+  .card-value.featured.stock { color: var(--accent); }
+  .card-value.featured.buyout{ color: var(--accent2); }
+  .card-value.positive.stock { color: var(--accent); }
+  .card-value.positive.buyout{ color: var(--accent2); }
+  .card-value.warn  { color: var(--warn); }
+  .card-value.empty { color: var(--dim); }
 
+  /* Breakdown */
   .breakdown-block { margin-bottom: 2rem; }
-  .breakdown {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .bd-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 11px 18px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
+  .breakdown { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .bd-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 18px; border-bottom: 1px solid var(--border); font-size: 14px; }
   .bd-row:last-child { border-bottom: none; background: var(--surface2); }
   .bd-lbl { color: var(--muted); }
   .bd-lbl small { font-size: 11px; color: var(--dim); }
   .bd-val { font-family: var(--mono); font-size: 14px; color: var(--text); }
-  .bd-row:last-child .bd-val { font-size: 16px; font-weight: 500; color: var(--accent); }
+  .bd-row:last-child .bd-val.stock  { font-size: 16px; font-weight: 500; color: var(--accent); }
+  .bd-row:last-child .bd-val.buyout { font-size: 16px; font-weight: 500; color: var(--accent2); }
 
+  /* Bar */
   .bar-block { margin-bottom: 2.5rem; }
-  .bar-track {
-    height: 6px;
-    background: var(--surface2);
-    border-radius: 3px;
-    overflow: hidden;
-    margin: 8px 0 6px;
-  }
-  .bar-fill {
-    height: 100%;
-    border-radius: 3px;
-    background: var(--accent);
-    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .bar-fill.warn { background: var(--warn); }
+  .bar-track { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin: 8px 0 6px; }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); }
+  .bar-fill.stock  { background: var(--accent); }
+  .bar-fill.buyout { background: var(--accent2); }
+  .bar-fill.warn   { background: var(--warn); }
   .bar-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--dim); font-family: var(--mono); }
 
-  .footer-note {
-    border-top: 1px solid var(--border);
-    padding-top: 1.5rem;
-    font-size: 12px;
-    color: var(--dim);
-    line-height: 1.7;
-  }
+  /* Footer */
+  .footer-note { border-top: 1px solid var(--border); padding-top: 1.5rem; font-size: 12px; color: var(--dim); line-height: 1.7; }
   .footer-note strong { color: var(--muted); font-weight: 500; }
-
-  .empty-state { color: var(--dim); font-family: var(--mono); }
 </style>
 </head>
 <body>
 <div class="container">
 
   <div class="header">
-    <div class="header-top">
-      <span class="company">Bergsen, Inc.</span>
-    </div>
+    <p class="company">Bergsen, Inc.</p>
     <h1>Pricing Calculator</h1>
-    <p class="subtitle">Based on Q1 2026 overhead rate — 21.1¢ per dollar of net sales</p>
+    <p class="subtitle">Q1 2026 overhead rates — select order type to begin</p>
+  </div>
+
+  <div style="margin-bottom:2rem;">
+    <p class="section-label">Order type</p>
+    <div class="order-toggle">
+      <button class="order-btn stock active" onclick="setOrderType('stock', this)">
+        <span class="ob-title">Stock order</span>
+        <span class="ob-desc">Mill direct — received, stocked, and pulled from warehouse inventory</span>
+        <span class="ob-rate">Overhead rate: 23.5¢ / $1</span>
+      </button>
+      <button class="order-btn buyout" onclick="setOrderType('buyout', this)">
+        <span class="ob-title">Buy-out order</span>
+        <span class="ob-desc">Sourced from distributor — inspect, pass-through, minimal warehouse touch</span>
+        <span class="ob-rate">Overhead rate: 13.0¢ / $1</span>
+      </button>
+    </div>
   </div>
 
   <div class="input-block">
     <p class="section-label">Material cost</p>
-    <div class="input-wrap">
+    <div class="input-wrap" id="input-wrap">
       <span class="prefix">$</span>
       <input type="number" id="mat-cost" placeholder="0.00" min="0" step="0.01" />
     </div>
@@ -201,33 +203,33 @@
 
   <div class="tier-block">
     <p class="section-label">Profit target</p>
-    <div class="tiers">
-      <button class="tier-btn active" data-margin="0.20" onclick="setTarget(this)">Conservative — 20%</button>
-      <button class="tier-btn" data-margin="0.25" onclick="setTarget(this)">Standard — 25%</button>
-      <button class="tier-btn" data-margin="0.30" onclick="setTarget(this)">Strong — 30%</button>
+    <div class="tiers" id="tiers">
+      <button class="tier-btn stock active" data-margin="0.20" onclick="setTarget(this)">Conservative — 20%</button>
+      <button class="tier-btn stock" data-margin="0.25" onclick="setTarget(this)">Standard — 25%</button>
+      <button class="tier-btn stock" data-margin="0.30" onclick="setTarget(this)">Strong — 30%</button>
     </div>
   </div>
 
-  <div class="cards">
-    <div class="card featured">
+  <div class="cards" id="cards">
+    <div class="card featured stock" id="card-featured">
       <p class="card-label">Recommended sell price</p>
-      <p class="card-value featured empty-state" id="sell-price">—</p>
+      <p class="card-value featured stock empty" id="sell-price">—</p>
     </div>
     <div class="card">
       <p class="card-label">Gross profit $</p>
-      <p class="card-value empty-state" id="gross-profit">—</p>
+      <p class="card-value empty" id="gross-profit">—</p>
     </div>
     <div class="card">
       <p class="card-label">Gross margin %</p>
-      <p class="card-value empty-state" id="gross-margin">—</p>
+      <p class="card-value empty" id="gross-margin">—</p>
     </div>
     <div class="card">
       <p class="card-label">Overhead covered</p>
-      <p class="card-value empty-state" id="overhead-cov">—</p>
+      <p class="card-value empty" id="overhead-cov">—</p>
     </div>
     <div class="card">
       <p class="card-label">Profit amount</p>
-      <p class="card-value empty-state" id="profit-amt">—</p>
+      <p class="card-value empty" id="profit-amt">—</p>
     </div>
   </div>
 
@@ -236,42 +238,85 @@
     <div class="breakdown">
       <div class="bd-row">
         <span class="bd-lbl">Material cost</span>
-        <span class="bd-val empty-state" id="bd-mat">—</span>
+        <span class="bd-val empty" id="bd-mat">—</span>
       </div>
       <div class="bd-row">
-        <span class="bd-lbl">Overhead load <small>(21.1¢ per $1 cost)</small></span>
-        <span class="bd-val empty-state" id="bd-oh">—</span>
+        <span class="bd-lbl">Overhead load <small id="oh-label">(23.5¢ per $1 cost)</small></span>
+        <span class="bd-val empty" id="bd-oh">—</span>
       </div>
       <div class="bd-row">
         <span class="bd-lbl">Profit target</span>
-        <span class="bd-val empty-state" id="bd-profit">—</span>
+        <span class="bd-val empty" id="bd-profit">—</span>
       </div>
       <div class="bd-row">
         <span class="bd-lbl">Sell price</span>
-        <span class="bd-val empty-state" id="bd-total">—</span>
+        <span class="bd-val stock" id="bd-total">—</span>
       </div>
     </div>
   </div>
 
   <div class="bar-block">
     <p class="section-label">Gross margin</p>
-    <div class="bar-track"><div class="bar-fill" id="margin-bar" style="width:0%"></div></div>
-    <div class="bar-labels"><span>0%</span><span id="bar-pct">enter a cost above</span><span>50%</span></div>
+    <div class="bar-track"><div class="bar-fill stock" id="margin-bar" style="width:0%"></div></div>
+    <div class="bar-labels"><span>0%</span><span id="bar-pct">select order type and enter cost</span><span>50%</span></div>
   </div>
 
   <div class="footer-note">
-    <strong>Overhead rate source:</strong> Q1 2026 P&L (Jan–Mar). Selling expenses ($280,357) + G&A ($431,851) = $712,208 total overhead on $3,366,595 net sales = <strong>21.1¢ overhead per dollar of revenue</strong>. Profit target is applied on top of material cost + overhead. Adjust tier based on competitive conditions, order size, and customer relationship.
+    <strong>Overhead rates — Q1 2026 (Jan–Mar):</strong> Total overhead $712,208 on $3,366,595 net sales = 21.1¢ blended rate.
+    <strong>Stock rate (23.5¢)</strong> reflects full warehouse burden: unloading, putaway, inventory carry, pick &amp; pack.
+    <strong>Buy-out rate (13.0¢)</strong> reflects lighter touch: receiving inspection, pass-through fulfillment, no storage cost.
+    Rates will be updated each quarter as cumulative YTD P&amp;L is available.
   </div>
 
 </div>
 <script>
-  const OVERHEAD_RATE = 0.211;
+  const RATES = { stock: 0.235, buyout: 0.130 };
+  let orderType    = 'stock';
   let targetMargin = 0.20;
 
-  function fmt(n) {
-    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
+  function fmt(n) { return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function pct(n) { return (n * 100).toFixed(1) + '%'; }
+
+  function setOrderType(type, btn) {
+    orderType = type;
+    document.querySelectorAll('.order-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Update tier button colors
+    document.querySelectorAll('.tier-btn').forEach(b => {
+      b.classList.remove('stock', 'buyout');
+      b.classList.add(type);
+    });
+
+    // Update featured card border
+    const fc = document.getElementById('card-featured');
+    fc.classList.remove('stock', 'buyout');
+    fc.classList.add(type);
+
+    const sp = document.getElementById('sell-price');
+    sp.classList.remove('stock', 'buyout');
+    sp.classList.add('featured', type);
+
+    // Update bar color
+    const bar = document.getElementById('margin-bar');
+    bar.classList.remove('stock', 'buyout');
+    if (!bar.classList.contains('warn')) bar.classList.add(type);
+
+    // Update bd-total color
+    const bdt = document.getElementById('bd-total');
+    bdt.classList.remove('stock', 'buyout');
+    bdt.classList.add(type);
+
+    // Update overhead label
+    const rate = RATES[type];
+    document.getElementById('oh-label').textContent = '(' + (rate * 100).toFixed(1) + '¢ per $1 cost)';
+
+    // Update input border mode
+    const iw = document.getElementById('input-wrap');
+    type === 'buyout' ? iw.classList.add('buyout-mode') : iw.classList.remove('buyout-mode');
+
+    recalc();
+  }
 
   function setTarget(btn) {
     document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
@@ -281,54 +326,51 @@
   }
 
   function recalc() {
-    const raw = parseFloat(document.getElementById('mat-cost').value);
-    const ids = ['sell-price','gross-profit','gross-margin','overhead-cov','profit-amt','bd-mat','bd-oh','bd-profit','bd-total'];
+    const raw  = parseFloat(document.getElementById('mat-cost').value);
+    const mode = orderType;
+    const cardIds = ['sell-price','gross-profit','gross-margin','overhead-cov','profit-amt'];
+    const bdIds   = ['bd-mat','bd-oh','bd-profit','bd-total'];
 
     if (!raw || raw <= 0) {
-      ids.forEach(id => {
-        const el = document.getElementById(id);
-        el.textContent = '—';
-        el.className = 'card-value empty-state';
-      });
-      document.getElementById('bar-pct').textContent = 'enter a cost above';
+      cardIds.forEach(id => { const el = document.getElementById(id); el.textContent = '—'; el.className = 'card-value empty'; });
+      bdIds.forEach(id => { document.getElementById(id).textContent = '—'; });
+      document.getElementById('sell-price').className = 'card-value featured ' + mode + ' empty';
+      document.getElementById('bd-total').className   = 'bd-val ' + mode;
+      document.getElementById('bar-pct').textContent  = 'enter a cost above';
       document.getElementById('margin-bar').style.width = '0%';
-      document.getElementById('margin-bar').className = 'bar-fill';
       return;
     }
 
-    const overhead  = raw * OVERHEAD_RATE;
-    const base      = raw + overhead;
-    const profitAmt = base * targetMargin;
-    const sellPrice = base + profitAmt;
+    const overhead    = raw * RATES[mode];
+    const base        = raw + overhead;
+    const profitAmt   = base * targetMargin;
+    const sellPrice   = base + profitAmt;
     const grossProfit = sellPrice - raw;
     const grossMargin = grossProfit / sellPrice;
-    const isWarn = grossMargin < 0.18;
+    const isWarn      = grossMargin < 0.18;
 
-    const set = (id, val, cls) => {
+    const setCard = (id, val, extra) => {
       const el = document.getElementById(id);
       el.textContent = val;
-      el.className = 'card-value ' + (cls || 'neutral');
+      el.className = 'card-value ' + (extra || 'neutral');
     };
 
-    set('sell-price',   fmt(sellPrice),   'featured');
-    set('gross-profit', fmt(grossProfit), grossMargin >= 0.25 ? 'positive' : isWarn ? 'warn' : 'neutral');
-    set('gross-margin', pct(grossMargin), grossMargin >= 0.25 ? 'positive' : isWarn ? 'warn' : 'neutral');
-    set('overhead-cov', fmt(overhead),    'neutral');
-    set('profit-amt',   fmt(profitAmt),   'neutral');
+    setCard('sell-price',   fmt(sellPrice),   'featured ' + mode);
+    setCard('gross-profit', fmt(grossProfit), grossMargin >= 0.25 ? 'positive ' + mode : isWarn ? 'warn' : 'neutral');
+    setCard('gross-margin', pct(grossMargin), grossMargin >= 0.25 ? 'positive ' + mode : isWarn ? 'warn' : 'neutral');
+    setCard('overhead-cov', fmt(overhead),    'neutral');
+    setCard('profit-amt',   fmt(profitAmt),   'neutral');
 
     document.getElementById('bd-mat').textContent    = fmt(raw);
     document.getElementById('bd-oh').textContent     = fmt(overhead);
     document.getElementById('bd-profit').textContent = fmt(profitAmt);
     document.getElementById('bd-total').textContent  = fmt(sellPrice);
-
-    ['bd-mat','bd-oh','bd-profit','bd-total'].forEach(id => {
-      document.getElementById(id).className = 'bd-val';
-    });
+    document.getElementById('bd-total').className    = 'bd-val ' + mode;
 
     const barPct = Math.min(grossMargin * 100 / 50 * 100, 100);
     const bar = document.getElementById('margin-bar');
     bar.style.width = barPct + '%';
-    bar.className = 'bar-fill' + (isWarn ? ' warn' : '');
+    bar.className = 'bar-fill ' + (isWarn ? 'warn' : mode);
     document.getElementById('bar-pct').textContent = pct(grossMargin);
   }
 
